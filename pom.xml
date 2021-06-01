@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.GG-A</groupId>
-    <artifactId>Text-parent</artifactId>
+    <artifactId>text-parent</artifactId>
     <version>0.0.1</version>
 
     <modules>
-        <module>Text</module>
-        <module>Text-tests</module>
+        <module>text</module>
+        <module>text-tests</module>
     </modules>
 
     <packaging>pom</packaging>

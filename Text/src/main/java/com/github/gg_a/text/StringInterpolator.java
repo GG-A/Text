@@ -44,8 +44,7 @@ public class StringInterpolator {
     }
 
     public StringInterpolator(final char escape, final String valueDelimiter, final Tuple... tuples) {
-        this(StringSubstitutor.DEFAULT_VAR_START, StringSubstitutor.DEFAULT_VAR_END,
-                escape, valueDelimiter, new HashMap<>());
+        this(escape, valueDelimiter, new HashMap<>());
         tuplesPutToMap(tuples);
     }
 
@@ -86,27 +85,19 @@ public class StringInterpolator {
         return this;
     }
 
-    private void tuplesPutToMap(Tuple... tuples) {
-        if (tuples != null) {
-            Arrays.stream(tuples).filter(e -> e != null && e.arity() != 0)
-                    .forEach(t -> valueMap.putAll(t.toMap()));
-            substitutor.setVariableResolver(StringLookupFactory.INSTANCE.mapStringLookup(valueMap));
-        }
-    }
-
     public StringInterpolator add(Map<String, Object> valueMap) {
         if (valueMap != null) {
             this.valueMap.putAll(valueMap);
-            substitutor.setVariableResolver(StringLookupFactory.INSTANCE.mapStringLookup(valueMap));
+            substitutor.setVariableResolver(StringLookupFactory.INSTANCE.mapStringLookup(this.valueMap));
         }
 
         return this;
     }
 
     public StringInterpolator set(Map<String, Object> valueMap) {
-        valueMap.clear();
+        this.valueMap.clear();
         if (valueMap != null)  this.valueMap.putAll(valueMap);
-        substitutor.setVariableResolver(StringLookupFactory.INSTANCE.mapStringLookup(valueMap));
+        substitutor.setVariableResolver(StringLookupFactory.INSTANCE.mapStringLookup(this.valueMap));
         return this;
     }
 
@@ -116,6 +107,14 @@ public class StringInterpolator {
             substitutor.setVariableResolver(StringLookupFactory.INSTANCE.mapStringLookup(valueMap));
         }
         return this;
+    }
+
+    private void tuplesPutToMap(Tuple... tuples) {
+        if (tuples != null) {
+            Arrays.stream(tuples).filter(e -> e != null && e.arity() != 0)
+                    .forEach(t -> valueMap.putAll(t.toMap()));
+            substitutor.setVariableResolver(StringLookupFactory.INSTANCE.mapStringLookup(valueMap));
+        }
     }
 
     public String parse(String source) {
