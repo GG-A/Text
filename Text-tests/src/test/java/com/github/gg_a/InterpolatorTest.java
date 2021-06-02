@@ -37,6 +37,37 @@ public class InterpolatorTest {
     }
 
     @Test
+    public void testSubstitutionInValuesAndVariables() {
+        System.out.println("=========testSubstitutionInValuesAndVariables=========");
+        Tuple tuple = Tuple.of(1, 2, "tom", "${one}")
+                .alias("one", "two", "name.1", "key");
+
+        String source = "${key}==${name.${one}}==${name.${two}}==${name.${key}}==$${name.${key}}";
+
+        StringInterpolator si = StringInterpolator.of(tuple);
+        String parse;
+        parse = si.parse(source);
+        System.out.println(parse);
+        assertEquals("${one}==${name.${one}}==${name.${two}}==${name.${key}}==${name.${one}}", parse);
+
+        si.setSubstitutionInVariables(true);      // default is false
+        parse = si.parse(source);
+        System.out.println(parse);
+        assertEquals("${one}==tom==${name.${two}}==${name.${key}}==${name.${one}}", parse);
+
+        si.setSubstitutionInValues(true);       // default is false
+        parse = si.parse(source);
+        System.out.println(parse);
+        assertEquals("1==tom==${name.${two}}==tom==${name.1}", parse);
+
+        si.setSubstitutionInVariables(false);
+        parse = si.parse(source);
+        System.out.println(parse);
+        assertEquals("1==${name.${one}}==${name.${two}}==${name.${key}}==${name.1}", parse);
+
+    }
+
+    @Test
     public void testDefaultValueAndEscape() {
         String source = "${NAME}==${age:20}==${ID}==${ID }==$${ID}==${id}==${age::20}" +
                 "==$$${ID}==$$$${ID}==$${${ID}";
@@ -53,6 +84,14 @@ public class InterpolatorTest {
         System.out.println(parse1);
         assertEquals("123456==${ID}==zs==$20.0", parse1);
 
+    }
+
+    @Test
+    public void testUndefinedVariableException() {
+        String source = "${name}";
+        StringInterpolator si = new StringInterpolator();
+        si.setUndefinedVariableException(true);     // default is true.
+        assertThrows(IllegalArgumentException.class, () -> si.parse(source));
     }
 
     @Test

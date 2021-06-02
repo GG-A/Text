@@ -5,7 +5,7 @@
     <parent>
         <artifactId>text-parent</artifactId>
         <groupId>com.github.GG-A</groupId>
-        <version>0.0.1</version>
+        <version>0.0.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,7 +16,7 @@
         <dependency>
             <groupId>com.github.GG-A</groupId>
             <artifactId>text</artifactId>
-            <version>0.0.1</version>
+            <version>0.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
